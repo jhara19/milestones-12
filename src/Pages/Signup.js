@@ -9,10 +9,11 @@ const Signup = () => {
 
     const {createUser, updateUser} = useContext(AuthContext);
    const [signupError, setSignupError] = useState('');
-   const navigate = useNavigate();
+   const [createdUserEmail, setCreatedUserEmail] = useState('')
+    const navigate = useNavigate();
 
     const handelSignup = (data) => {
-        console.log(data);
+        //console.log(data);
 
         //form empty
         setSignupError('');
@@ -21,22 +22,54 @@ const Signup = () => {
         .then(result => {
             const user = result.user;
             console.log(user);
-             
+
             //UPDATE USER PROFILE
             const userInfo = {
-                displyName: data.name
+                displayName: data.name
             }
             updateUser(userInfo)
             .then(() => {
-                navigate('/')
+                saveUser(data.name, data.email);
+                //navigate('/')
             })
-
             .catch(e =>console.log(e))
             toast('Your registration is success')
         })
 
-        .catch(e => toast(e,'success'))
+        .catch(e => {
+            toast(e,'success');
+            setSignupError(e.message);
+        });
     }
+
+    const saveUser = (name, email) =>{
+        const user ={name, email};
+        fetch('http://localhost:5000/users', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(user)
+        })
+        .then(res => res.json())
+        .then(data =>{
+            //setCreatedUserEmail(email);
+            getUserToken(email);
+        })
+    }
+
+    
+const getUserToken = email => {
+    fetch(`http://localhost:5000/jwt?email=${email}`)
+    .then(res => res.json())
+    .then(data => {
+        if(data.accessToken){
+          localStorage.setItem('accessToken',data.accessToken);
+        navigate('/')
+        }
+    })
+}
+
     return (
         <div className='h-[800px] flex justify-center items-center'>
         <div className='w-96 p-7'>

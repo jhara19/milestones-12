@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { AuthContext } from '../../contexts/AuthProvider';
 
 
-const BookingModal = ({ treatement,setTreatement, selectedDate}) => {
+const BookingModal = ({ treatement,setTreatement, selectedDate,refetch}) => {
     const { name:treatmentName,slots } = treatement;
     const date = format(selectedDate,'PP');
     const {user} = useContext(AuthContext)
@@ -41,7 +41,10 @@ const BookingModal = ({ treatement,setTreatement, selectedDate}) => {
         console.log(data);
         if(data.acknowledged){
             setTreatement(null);
-            toast('Booking success')
+            toast('Booking success');
+            refetch();
+        }else{
+            toast.error(data.message);
         }
         
       })

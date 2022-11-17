@@ -21,12 +21,10 @@ const signIn = (email,password)=> {
     return signInWithEmailAndPassword(auth,email,password)
 }
 
-//update profile
-const updateUser = (userInfo) => {
+ //update profile
+ const updateUser = (userInfo) => {
     return updateProfile(auth.currentUser, userInfo)
   }
-
-
 
 //This function helps us to know whether users logged in or not
 useEffect(() => {
@@ -40,7 +38,7 @@ useEffect(() => {
     }
 
   },[]);
-  
+ 
 
 
 
